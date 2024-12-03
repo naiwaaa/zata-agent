@@ -1,8 +1,7 @@
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING
-
-import tweepy
 
 from zata.data.posts import InfluencerPost
 from zata.data.scrapers import Scraper
@@ -12,6 +11,12 @@ if TYPE_CHECKING:
     from tweepy.user import User
 
     from zata.envs.credentials import XCredentials
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=SyntaxWarning)
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+    import tweepy
 
 
 class XScraper(Scraper):
