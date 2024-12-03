@@ -32,6 +32,8 @@ dependencies = [
   "cloudpickle>=3.1.0",
   "rich[jupyter]>=13.9.4",
   "structlog>=24.4.0",
+  "tweepy>=4.14.0",
+  "typer-slim>=0.14.0",
 ]
 
 [project.urls]
@@ -39,7 +41,7 @@ Homepage = "https://sr.ht/~naiwaaa/zata-agent"
 Repository = "https://sr.ht/~naiwaaa/zata-agent"
 
 [project.scripts]
-cli = "zata.cli:main"
+zata = "zata.cli:app"
 
 [tool.hatch.version]
 path = "src/zata/__init__.py"
@@ -84,7 +86,7 @@ mypy_path = "src"
 python_version = "3.12"
 exclude = [".cache/", ".venv/"]
 # disallow dynamic typing
-disallow_any_explicit = true
+disallow_any_explicit = false
 disallow_any_generics = true
 # untyped definitions and calls
 disallow_untyped_calls = true
@@ -137,6 +139,9 @@ init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 warn_untyped_fields = true
+
+[tool.pyright]
+reportUnknownMemberType = "none"
 
 [tool.pytest.ini_options]
 addopts = [

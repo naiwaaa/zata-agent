@@ -1,8 +1,15 @@
 from __future__ import annotations
 
-from rich import print as rprint
+import typer
+
+from zata.cli import scrape
 
 
-def main() -> None:
-    """Main CLI."""
-    rprint("Hello, world!")
+app = typer.Typer(
+    short_help="-h",
+    add_completion=False,
+    rich_markup_mode=None,
+    context_settings={"help_option_names": ["-h", "--help"]},
+)
+
+app.command()(scrape.scrape)
