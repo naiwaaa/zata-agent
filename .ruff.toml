@@ -168,7 +168,7 @@ mark-parentheses = true
 ban-relative-imports = "all"
 
 [lint.flake8-type-checking]
-exempt-modules = ["typing", "typing_extensions"]
+exempt-modules = ["typing", "typing_extensions", "pathlib"]
 runtime-evaluated-base-classes = ["pydantic.BaseModel"]
 runtime-evaluated-decorators = ["pydantic.validate_call"]
 strict = true

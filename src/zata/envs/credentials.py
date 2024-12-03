@@ -11,8 +11,4 @@ class XCredentials(BaseSettings):
         extra="ignore",
     )
 
-    api_key: str
-    api_secret: str
     bearer_token: str
-    access_token: str
-    access_secret: str
