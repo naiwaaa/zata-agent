@@ -7,6 +7,7 @@ import typer
 import polars as pl
 
 from zata.data.scrapers import Site
+from zata.data.pipelines import preprocess_data
 from zata.data.scrapers.x import XScraper
 from zata.envs.credentials import XCredentials
 
@@ -45,7 +46,38 @@ def scrape(
 
     posts = scraper.scrape_posts(username)
 
-    pl.DataFrame(posts).write_csv(output)
+    pl.DataFrame(posts).write_parquet(output)
+
+
+@app.command()
+def data_prep(
+    raw: Annotated[
+        Path,
+        typer.Option(
+            exists=False,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            resolve_path=True,
+            help="Input raw data",
+        ),
+    ],
+    output: Annotated[
+        Path,
+        typer.Option(
+            exists=False,
+            file_okay=True,
+            dir_okay=False,
+            writable=True,
+            resolve_path=True,
+            help="Save to CSV file",
+        ),
+    ],
+) -> None:
+    """Preprocess raw data."""
+    data = pl.read_parquet(raw)
+    processed_data = preprocess_data(data)
+    processed_data.write_parquet(output)
 
 
 @app.command()
