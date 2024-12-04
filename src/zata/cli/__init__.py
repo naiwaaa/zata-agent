@@ -34,7 +34,7 @@ def scrape(
             dir_okay=False,
             writable=True,
             resolve_path=True,
-            help="Save to CSV file",
+            help="Save to Parquet file",
         ),
     ],
 ) -> None:
@@ -72,7 +72,7 @@ def data_prep(
             dir_okay=False,
             writable=True,
             resolve_path=True,
-            help="Save to CSV file",
+            help="Save to Parquet file",
         ),
     ],
 ) -> None:
