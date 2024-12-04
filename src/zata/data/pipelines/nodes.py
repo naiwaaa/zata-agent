@@ -27,6 +27,16 @@ def remove_short_tweets(
     return data.filter(pl.col(col).str.len_chars() > min_length)
 
 
+def remove_non_english_characters(
+    data: pl.DataFrame,
+    col: str,
+    new_col: str | None = None,
+) -> pl.DataFrame:
+    return data.with_columns(
+        pl.col(col).str.replace_all(r"[^\p{Ascii}]", "").alias(new_col or col)
+    )
+
+
 def replace_newlines(
     data: pl.DataFrame,
     col: str,
@@ -40,9 +50,7 @@ def replace_mentions(
     col: str,
     new_col: str | None = None,
 ) -> pl.DataFrame:
-    return data.with_columns(
-        pl.col(col).str.replace_all(PATTERN_MENTION, "MENTION").alias(new_col or col)
-    )
+    return data.with_columns(pl.col(col).str.replace_all("@", "").alias(new_col or col))
 
 
 def replace_urls(
@@ -51,7 +59,7 @@ def replace_urls(
     new_col: str | None = None,
 ) -> pl.DataFrame:
     return data.with_columns(
-        pl.col(col).str.replace_all(PATTERN_URL, "URL").alias(new_col or col)
+        pl.col(col).str.replace_all(PATTERN_URL, "").alias(new_col or col)
     )
 
 
@@ -61,3 +69,21 @@ def replace_hashtags(
     new_col: str | None = None,
 ) -> pl.DataFrame:
     return data.with_columns(pl.col(col).str.replace_all("#", "").alias(new_col or col))
+
+
+def replace_amp(
+    data: pl.DataFrame,
+    col: str,
+    new_col: str | None = None,
+) -> pl.DataFrame:
+    return data.with_columns(
+        pl.col(col).str.replace_all("&amp,", "and").alias(new_col or col)
+    )
+
+
+def remove_blank_spaces(
+    data: pl.DataFrame,
+    col: str,
+    new_col: str | None = None,
+) -> pl.DataFrame:
+    return data.with_columns(pl.col(col).str.strip_chars(" ").alias(new_col or col))
