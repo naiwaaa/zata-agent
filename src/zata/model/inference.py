@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    from zata.model.args import FinetuningArguments
+
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=SyntaxWarning)
@@ -17,6 +19,7 @@ with warnings.catch_warnings():
 
 def generate_response_wrapper(
     finetuned_model: str,
+    finetuning_args: FinetuningArguments,
 ) -> Callable[[str, list[dict[str, str]]], str]:
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=finetuned_model,
@@ -26,7 +29,10 @@ def generate_response_wrapper(
     FastLanguageModel.for_inference(model)
 
     def func(prompt: str, history: list[dict[str, str]]) -> str:
-        history.append({"role": "user", "content": prompt})
+        history.append({
+            "role": "user",
+            "content": f"{finetuning_args.prompt.instruction} {prompt}",
+        })
 
         input_text = tokenizer.apply_chat_template(
             history,

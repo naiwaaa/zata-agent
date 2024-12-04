@@ -4,6 +4,10 @@ from unsloth import is_bfloat16_supported
 from pydantic import BaseModel
 
 
+class PromptArguments(BaseModel):
+    instruction: str
+
+
 class PeftArguments(BaseModel):
     r: int = 16
     target_modules: list[str] = [
@@ -40,5 +44,6 @@ class TrainingArguments(BaseModel):
 
 
 class FinetuningArguments(BaseModel):
+    prompt: PromptArguments
     peft: PeftArguments
     training: TrainingArguments

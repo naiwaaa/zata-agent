@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import warnings
-import contextlib
 from typing import TYPE_CHECKING
-from http.client import RemoteDisconnected
 
 from zata.data.posts import InfluencerPost
 from zata.data.scrapers import Scraper
@@ -32,14 +30,10 @@ class XScraper(Scraper):
         )
 
         scraped_posts: list[InfluencerPost] = []
-        with contextlib.suppress(
-            tweepy.TweepyException,
-            ConnectionError,
-            RemoteDisconnected,
-        ):
-            scraped_posts.extend(
-                InfluencerPost(id=str(tweet.id), text=tweet.text)
-                for tweet in paginator.flatten(limit=1000)
-            )
+
+        scraped_posts.extend(
+            InfluencerPost(id=str(tweet.id), text=tweet.text)
+            for tweet in paginator.flatten(limit=500)
+        )
 
         return scraped_posts

@@ -1,21 +1,38 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
-from zata.model.constants import DATASET_PROMPT
+import warnings
+from typing import TYPE_CHECKING, Any
 
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=SyntaxWarning)
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+    from unsloth.chat_templates import get_chat_template
+
 
 def formatting_prompts_wrapper_func(
-    eos_token: str,
+    tokenizer: Any,  # noqa: ANN401
+    instruction: str,
 ) -> Callable[[dict[str, list[str]]], dict[str, list[str]]]:
+    tokenizer = get_chat_template(
+        tokenizer,
+        chat_template="qwen2.5",
+        system_message=instruction,
+    )
+
     def func(examples: dict[str, list[str]]) -> dict[str, list[str]]:
         return {
             "text": [
-                DATASET_PROMPT.format(example) + eos_token for example in examples["text"]
+                tokenizer.apply_chat_template(
+                    [{"from": "assistant", "value": example}],
+                    tokenize=False,
+                    add_generation_prompt=False,
+                )
+                for example in examples["text"]
             ]
         }
 

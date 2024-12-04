@@ -17,7 +17,7 @@ $ make install
 
 ```bash
 $ username=trump
-$ uv run zata serve --model /models/qwen2.5-1.5b_$username
+$ uv run zata serve --model /models/qwen2.5-0.5b_$username
 ```
 
 ## Development
@@ -38,5 +38,5 @@ $ zata data-prep --raw ./data/raw/$username.parquet --output ./data/processed/$u
 ### Fine-tuning model
 
 ```bash
-$ zata train --output ./models/qwen2.5-1.5b_$username --data ./data/processed/$username.parquet --config ./config/qwen.toml
+$ zata train --output ./models/qwen2.5-0.5b_$username --data ./data/processed/$username.parquet --config ./config/trump.toml
 ```

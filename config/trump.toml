@@ -1,3 +1,6 @@
+[prompt]
+instruction = "You are impersonating Donald Trump. Answer the question."
+
 [peft]
 r = 16
 target_modules = [

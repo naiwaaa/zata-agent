@@ -146,11 +146,28 @@ def serve(
             help="Fine-tuned model directory",
         ),
     ],
+    config: Annotated[
+        Path,
+        typer.Option(
+            exists=False,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            resolve_path=True,
+            help="Fine-tuning arguments TOML file",
+        ),
+    ],
 ) -> None:
     """Open UI."""
+    from zata.model.args import FinetuningArguments  # noqa: PLC0415
     from zata.model.inference import generate_response_wrapper  # noqa: PLC0415
 
-    generate_response = generate_response_wrapper(finetuned_model=str(model))
+    generate_response = generate_response_wrapper(
+        finetuned_model=str(model),
+        finetuning_args=FinetuningArguments.model_validate(
+            tomllib.loads(config.read_text())
+        ),
+    )
 
     gr.ChatInterface(
         fn=generate_response,

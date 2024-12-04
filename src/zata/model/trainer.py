@@ -39,7 +39,10 @@ def train(
     )
 
     # prepare dataset
-    formatting_prompts_func = formatting_prompts_wrapper_func(tokenizer.eos_token)
+    formatting_prompts_func = formatting_prompts_wrapper_func(
+        tokenizer,
+        finetuning_args.prompt.instruction,
+    )
     dataset = load_dataset(
         "parquet",
         data_files={"train": str(data_path)},
