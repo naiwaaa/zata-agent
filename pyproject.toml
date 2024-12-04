@@ -34,6 +34,9 @@ dependencies = [
   "structlog>=24.4.0",
   "tweepy>=4.14.0",
   "typer-slim>=0.14.0",
+  "gradio>=5.7.1",
+  "transformers>=4.46.3",
+  "gradio-client>=1.5.0",
 ]
 
 [project.urls]
@@ -131,7 +134,7 @@ plugins = ["numpy.typing.mypy_plugin", "pydantic.mypy"]
 warn_unused_configs = false
 
 [[tool.mypy.overrides]]
-module = ["tweepy.*"]
+module = ["tweepy.*", "transformers.*", "gradio.*"]
 ignore_missing_imports = true
 
 [tool.pydantic-mypy]

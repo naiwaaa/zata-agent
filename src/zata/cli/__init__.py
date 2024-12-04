@@ -4,8 +4,10 @@ from typing import Annotated
 from pathlib import Path
 
 import typer
+import gradio as gr
 import polars as pl
 
+from zata.models import generate_response
 from zata.data.scrapers import Site
 from zata.data.pipelines import preprocess_data
 from zata.data.scrapers.x import XScraper
@@ -83,3 +85,13 @@ def data_prep(
 @app.command()
 def train() -> None:
     """Fine-tune LLM model."""
+
+
+@app.command()
+def serve() -> None:
+    """Open UI."""
+    gr.ChatInterface(
+        fn=generate_response,
+        type="messages",
+        title="Zata",
+    ).queue().launch()
