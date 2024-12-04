@@ -2,22 +2,22 @@ from __future__ import annotations
 
 from typing import Annotated
 from pathlib import Path
+from functools import partial
 
 import typer
 import gradio as gr
 import polars as pl
 
-from zata.models import generate_response
 from zata.data.scrapers import Site
 from zata.data.pipelines import preprocess_data
 from zata.data.scrapers.x import XScraper
+from zata.model.constants import DEFAULT_MODEL_NAME
 from zata.envs.credentials import XCredentials
 
 
 app = typer.Typer(
     short_help="-h",
     add_completion=False,
-    rich_markup_mode=None,
     context_settings={"help_option_names": ["-h", "--help"]},
 )
 
@@ -83,15 +83,63 @@ def data_prep(
 
 
 @app.command()
-def train() -> None:
+def train(
+    data: Annotated[
+        Path,
+        typer.Option(
+            exists=False,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            resolve_path=True,
+            help="Save fine-tuned model to this directory",
+        ),
+    ],
+    output: Annotated[
+        Path,
+        typer.Option(
+            exists=False,
+            file_okay=False,
+            dir_okay=True,
+            writable=True,
+            resolve_path=True,
+            help="Save fine-tuned model to this directory",
+        ),
+    ],
+    model_name: Annotated[str, typer.Option()] = DEFAULT_MODEL_NAME,
+) -> None:
     """Fine-tune LLM model."""
+    from zata.model import trainer  # noqa: PLC0415
+    from zata.model.args import PeftArguments, TrainingArguments  # noqa: PLC0415
+
+    trainer.train(
+        model_name=model_name,
+        data_path=data,
+        peft_args=PeftArguments(),
+        training_args=TrainingArguments(output_dir=str(output)),
+        save_to_dir=output,
+    )
 
 
 @app.command()
-def serve() -> None:
+def serve(
+    model: Annotated[
+        Path,
+        typer.Option(
+            exists=False,
+            file_okay=False,
+            dir_okay=True,
+            readable=True,
+            resolve_path=True,
+            help="Fine-tuned model directory",
+        ),
+    ],
+) -> None:
     """Open UI."""
+    from zata.model.inference import generate_response  # noqa: PLC0415
+
     gr.ChatInterface(
-        fn=generate_response,
+        fn=partial(generate_response, finetuned_model=model),
         type="messages",
         title="Zata",
     ).queue().launch()
