@@ -28,6 +28,6 @@ class XScraper(Scraper):
         paginator = tweepy.Paginator(self.client.get_users_tweets, user.id, max_results=5)
 
         return [
-            InfluencerPost(id=str(tweet.id), content=tweet.text)
+            InfluencerPost(id=str(tweet.id), text=tweet.text)
             for tweet in paginator.flatten(limit=10)
         ]

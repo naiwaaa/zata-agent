@@ -5,4 +5,4 @@ from pydantic import BaseModel
 
 class InfluencerPost(BaseModel):
     id: str
-    content: str
+    text: str

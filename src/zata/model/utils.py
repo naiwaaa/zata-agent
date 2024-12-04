@@ -11,10 +11,12 @@ if TYPE_CHECKING:
 
 def formatting_prompts_wrapper_func(
     eos_token: str,
-) -> Callable[[list[str]], dict[str, list[str]]]:
-    def func(examples: list[str]) -> dict[str, list[str]]:
+) -> Callable[[dict[str, list[str]]], dict[str, list[str]]]:
+    def func(examples: dict[str, list[str]]) -> dict[str, list[str]]:
         return {
-            "text": [DATASET_PROMPT.format(example) + eos_token for example in examples]
+            "text": [
+                DATASET_PROMPT.format(example) + eos_token for example in examples["text"]
+            ]
         }
 
     return func
