@@ -145,6 +145,10 @@ ignore = [
 typing-modules = ["numpy.typing"]
 
 [lint.per-file-ignores]
+"src/zata/model/constants.py" = [
+  # Line too long
+  "E501",
+]
 "**/scripts/*" = [
   # `print` found
   "T201",

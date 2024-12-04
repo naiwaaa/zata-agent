@@ -8,6 +8,10 @@ PATTERN_HASHTAG = r"#[a-zA-Z0-9_-]+"
 PATTERN_URL = r"(https?://)\S+|www\S+"
 
 
+def remove_cols(data: pl.DataFrame, cols: list[str]) -> pl.DataFrame:
+    return data.drop(cols)
+
+
 def remove_retweets(
     data: pl.DataFrame,
     col: str,
