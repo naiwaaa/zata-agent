@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import tomllib
 from typing import Annotated
 from pathlib import Path
 from functools import partial
@@ -95,6 +96,17 @@ def train(
             help="Save fine-tuned model to this directory",
         ),
     ],
+    config: Annotated[
+        Path,
+        typer.Option(
+            exists=False,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            resolve_path=True,
+            help="Fine-tuning arguments TOML file",
+        ),
+    ],
     output: Annotated[
         Path,
         typer.Option(
@@ -110,13 +122,14 @@ def train(
 ) -> None:
     """Fine-tune LLM model."""
     from zata.model import trainer  # noqa: PLC0415
-    from zata.model.args import PeftArguments, TrainingArguments  # noqa: PLC0415
+    from zata.model.args import FinetuningArguments  # noqa: PLC0415
 
     trainer.train(
         model_name=model_name,
         data_path=data,
-        peft_args=PeftArguments(),
-        training_args=TrainingArguments(output_dir=str(output)),
+        finetuning_args=FinetuningArguments.model_validate(
+            tomllib.loads(config.read_text())
+        ),
         save_to_dir=output,
     )
 

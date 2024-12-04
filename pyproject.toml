@@ -126,7 +126,7 @@ plugins = ["numpy.typing.mypy_plugin", "pydantic.mypy"]
 warn_unused_configs = false
 
 [[tool.mypy.overrides]]
-module = ["tweepy.*", "transformers.*", "gradio.*"]
+module = ["tweepy.*", "transformers.*", "gradio.*", "unsloth.*", "trl.*", "datasets.*"]
 ignore_missing_imports = true
 
 [tool.pydantic-mypy]

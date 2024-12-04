@@ -3,7 +3,7 @@ from __future__ import annotations
 import warnings
 from pathlib import Path
 
-from zata.model.constants import MAX_SEQ_LENGTH
+from zata.model.constants import APP_PROMPT, DEFAULT_MODEL_NAME
 
 
 with warnings.catch_warnings():
@@ -15,32 +15,27 @@ with warnings.catch_warnings():
 
 def generate_response(
     finetuned_model: Path,
-    prompt: str,
+    message: str,
     history: list[dict[str, str]],
 ) -> str:
+    history.append({"role": "user", "content": message})
+
     model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name=str(finetuned_model),
-        max_seq_length=MAX_SEQ_LENGTH,
+        model_name=str(DEFAULT_MODEL_NAME),
         load_in_4bit=True,
     )
 
     FastLanguageModel.for_inference(model)
 
-    history.append({"role": "user", "content": prompt})
+    inputs = tokenizer(
+        [
+            APP_PROMPT.format(
+                message,  # input
+                "",  # output
+            )
+        ],
+        return_tensors="pt",
+    ).to("cuda")
 
-    input_text = tokenizer.apply_chat_template(
-        history,
-        tokenize=False,
-        add_generation_prompt=True,
-    )
-    model_inputs = tokenizer([input_text], return_tensors="pt").to(model.device)
-
-    generated_ids = model.generate(**model_inputs, max_new_tokens=512)
-    generated_ids = [
-        output_ids[len(input_ids) :]
-        for input_ids, output_ids in zip(
-            model_inputs.input_ids, generated_ids, strict=False
-        )
-    ]
-
-    return tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+    outputs = model.generate(**inputs, max_new_tokens=64, use_cache=True)
+    return tokenizer.batch_decode(outputs)
