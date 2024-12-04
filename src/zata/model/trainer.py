@@ -53,7 +53,7 @@ def train(
         tokenizer=tokenizer,
         train_dataset=dataset,
         dataset_text_field="text",
-        dataset_num_proc=2,
+        dataset_num_proc=1,
         packing=False,
         args=TrainingArguments(
             output_dir=str(save_to_dir / "checkpoints"),
