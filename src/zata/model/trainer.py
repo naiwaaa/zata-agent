@@ -8,7 +8,6 @@ from datasets import load_dataset
 from transformers import TrainingArguments
 
 from zata.model.utils import formatting_prompts_wrapper_func
-from zata.model.constants import MAX_SEQ_LENGTH
 
 
 if TYPE_CHECKING:
@@ -54,7 +53,6 @@ def train(
         tokenizer=tokenizer,
         train_dataset=dataset,
         dataset_text_field="text",
-        max_seq_length=MAX_SEQ_LENGTH,
         dataset_num_proc=2,
         packing=False,
         args=TrainingArguments(

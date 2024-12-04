@@ -3,7 +3,6 @@ from __future__ import annotations
 import tomllib
 from typing import Annotated
 from pathlib import Path
-from functools import partial
 
 import typer
 import gradio as gr
@@ -149,10 +148,12 @@ def serve(
     ],
 ) -> None:
     """Open UI."""
-    from zata.model.inference import generate_response  # noqa: PLC0415
+    from zata.model.inference import generate_response_wrapper  # noqa: PLC0415
+
+    generate_response = generate_response_wrapper(finetuned_model=str(model))
 
     gr.ChatInterface(
-        fn=partial(generate_response, finetuned_model=model),
+        fn=generate_response,
         type="messages",
         title="Zata",
     ).queue().launch()

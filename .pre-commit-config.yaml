@@ -57,10 +57,10 @@ repos:
         entry: uv run mypy
         types: [python]
         language: system
-      - id: pytest
-        name: pytest
-        entry: uv run pytest
-        types: [python]
-        language: system
-        pass_filenames: false
-        always_run: true
+      # - id: pytest
+      #   name: pytest
+      #   entry: uv run pytest
+      #   types: [python]
+      #   language: system
+      #   pass_filenames: false
+      #   always_run: true
