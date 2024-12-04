@@ -49,7 +49,7 @@ def scrape(
 
     posts = scraper.scrape_posts(username)
 
-    pl.DataFrame(posts).write_parquet(output)
+    pl.DataFrame(posts).write_parquet(output, compression="zstd", compression_level=22)
 
 
 @app.command()
@@ -80,7 +80,7 @@ def data_prep(
     """Preprocess raw data."""
     data = pl.read_parquet(raw)
     processed_data = preprocess_data(data)
-    processed_data.write_parquet(output)
+    processed_data.write_parquet(output, compression="zstd", compression_level=22)
 
 
 @app.command()
