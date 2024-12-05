@@ -1,5 +1,7 @@
 # zata-agent
 
+![screenshot](./reports/screenshot.png)
+
 ## Requirements
 
 - Python 3.12
@@ -17,7 +19,7 @@ $ make install
 
 ```bash
 $ username=trump
-$ uv run zata serve --model /models/qwen2.5-0.5b_$username
+$ uv run zata serve --model /models/qwen2.5-0.5b-instruct_${username} --config ./config/${username}.toml
 ```
 
 ## Development
@@ -29,14 +31,14 @@ $ uv run zata serve --model /models/qwen2.5-0.5b_$username
 $ username=Ashcryptoreal
 
 # scrape tweets
-$ zata scrape --site X --username $username --output .data/raw/$username.parquet
+$ zata scrape --site X --username ${username} --output .data/raw/${username}.parquet
 
 # preprocess scraped tweets
-$ zata data-prep --raw ./data/raw/$username.parquet --output ./data/processed/$username.parquet
+$ zata data-prep --raw ./data/raw/${username}.parquet --output ./data/processed/${username}.parquet
 ```
 
 ### Fine-tuning model
 
 ```bash
-$ zata train --output ./models/qwen2.5-0.5b_$username --data ./data/processed/$username.parquet --config ./config/trump.toml
+$ zata train --output ./models/qwen2.5-0.5b-instruct_$username --data ./data/processed/$username.parquet --config ./config/trump.toml
 ```

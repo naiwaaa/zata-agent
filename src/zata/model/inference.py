@@ -19,7 +19,7 @@ with warnings.catch_warnings():
 
 def generate_response_wrapper(
     finetuned_model: str,
-    finetuning_args: FinetuningArguments,
+    finetuning_args: FinetuningArguments,  # noqa: ARG001
 ) -> Callable[[str, list[dict[str, str]]], str]:
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name=finetuned_model,
@@ -31,7 +31,7 @@ def generate_response_wrapper(
     def func(prompt: str, history: list[dict[str, str]]) -> str:
         history.append({
             "role": "user",
-            "content": f"{finetuning_args.prompt.instruction} {prompt}",
+            "content": prompt,
         })
 
         input_text = tokenizer.apply_chat_template(
@@ -39,9 +39,13 @@ def generate_response_wrapper(
             tokenize=False,
             add_generation_prompt=True,
         )
-        model_inputs = tokenizer([input_text], return_tensors="pt").to(model.device)
+        model_inputs = tokenizer(
+            [input_text],
+            add_special_tokens=False,
+            return_tensors="pt",
+        ).to(model.device)
 
-        generated_ids = model.generate(**model_inputs, max_new_tokens=512)
+        generated_ids = model.generate(**model_inputs, max_new_tokens=250)
         generated_ids = [
             output_ids[len(input_ids) :]
             for input_ids, output_ids in zip(

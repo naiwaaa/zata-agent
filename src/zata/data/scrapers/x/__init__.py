@@ -26,14 +26,14 @@ class XScraper(Scraper):
     def scrape_posts(self, username: str) -> list[InfluencerPost]:
         user: User = self.client.get_user(username=username).data
         paginator = tweepy.Paginator(
-            self.client.get_users_tweets, user.id, max_results=100
+            self.client.get_users_tweets, user.id, max_results=10
         )
 
         scraped_posts: list[InfluencerPost] = []
 
         scraped_posts.extend(
             InfluencerPost(id=str(tweet.id), text=tweet.text)
-            for tweet in paginator.flatten(limit=500)
+            for tweet in paginator.flatten(limit=50)
         )
 
         return scraped_posts
