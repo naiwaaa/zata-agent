@@ -1,5 +1,7 @@
 # zata-agent
 
+Fine-tuning LLM to impersonate influencer's tweeting styles.
+
 ![screenshot](./reports/screenshot.png)
 
 ## Requirements

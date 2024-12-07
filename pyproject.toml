@@ -32,8 +32,8 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://sr.ht/~naiwaaa/zata-agent"
-Repository = "https://sr.ht/~naiwaaa/zata-agent"
+Homepage = "https://git.sr.ht/~naiwaaa/zata-agent"
+Repository = "https://git.sr.ht/~naiwaaa/zata-agent"
 
 [project.scripts]
 zata = "zata.cli:app"
